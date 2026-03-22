@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>মডার্ণ স্পোর্টিং ক্লাব</title>
+    <!-- ফন্ট ও স্টাইল -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root { 
+            --primary-color: #00695c; 
+            --secondary-color: #004d40; 
+            --accent-color: #ff8f00; 
+            --bg-color: #fff9c4; 
+            --text-color: #263238; 
+            --white: #ffffff; 
+            --header-bg: #e0f2f1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Hind Siliguri', sans-serif; 
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(#ffe082 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-color); 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #ffffff, var(--header-bg));
+            padding: 15px 5%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo {
+            width: 70px; height: 70px; border-radius: 50%;
+            border: 3px solid var(--primary-color); object-fit: cover; background: #fff;
+        }
+        .club-info h1 { color: #d32f2f; font-size: 24px; font-weight: 700; margin-bottom: 2px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .club-info p { color: var(--dark); font-size: 13px; font-weight: 600; line-height: 1.3; }
+        .login-btn {
+            background: var(--primary-color); color: white; padding: 8px 20px;
+            border: none; border-radius: 30px; font-size: 15px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,105,92,0.3); transition: 0.3s;
+        }
+        .login-btn:hover { background: #004d40; transform: translateY(-2px); }
+
+        /* ================= LANDING PAGE ================= */
+        #landingPage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+        .durga-container { margin-bottom: 30px; animation: float 4s ease-in-out infinite; }
+        .durga-img {
+            width: 250px; height: auto; border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3); border: 5px solid #ffca28;
+            background: #fff;
+        }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        
+        .blink-btn {
+            background: #d32f2f; color: white; padding: 15px 40px; font-size: 22px; font-weight: bold;
+            border: 2px solid #ffeb3b; border-radius: 50px; cursor: pointer;
+            animation: blinker 1.5s linear infinite; margin-bottom: 30px; text-decoration: none; display: inline-block;
+        }
+        @keyframes blinker { 50% { opacity: 0.7; box-shadow: 0 0 20px #d32f2f; transform: scale(1.05); } }
+
+        /* ================= FOOTER ================= */
+        .footer { background: #263238; color: white; padding: 25px 20px 15px; text-align: center; width: 100%; margin-top: auto; }
+        .footer-address { font-size: 15px; margin-bottom: 10px; color: #b0bec5; }
+        .footer-contact { font-size: 16px; margin-bottom: 15px; color: #ffcc80; }
+        .fb-link { display: inline-block; color: #1877f2; font-size: 30px; margin-bottom: 15px; transition: 0.3s; background: white; border-radius: 50%; width: 35px; height: 35px; line-height: 35px; }
+        .copyright { border-top: 1px solid #455a64; padding-top: 10px; font-size: 12px; color: #90a4ae; }
+
+        /* ================= APP CONTAINER ================= */
+        .container { max-width: 100%; margin: 15px auto; background: var(--white); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding-bottom: 60px; width: 95%; }
+        .tabs { display: flex; background: #b2dfdb; position: sticky; top: 0; z-index: 10; overflow-x: auto; white-space: nowrap; border-bottom: 2px solid var(--primary-color); border-radius: 8px 8px 0 0; }
+        .tab-btn { flex: 1; min-width: 90px; padding: 12px 5px; border: none; background: transparent; font-size: 14px; font-weight: 600; font-family: 'Hind Siliguri', sans-serif; color: #444; cursor: pointer; }
+        .tab-btn.active { background: var(--primary-color); color: var(--white); }
+        .tab-content { display: none; padding: 15px; }
+        .tab-content.active { display: block; }
+        
+        /* App internal elements */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 15px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cfd8dc; border-radius: 6px; font-family: 'Hind Siliguri', sans-serif; font-size: 16px; }
+        .btn-submit { width: 100%; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; margin-top: 10px; cursor: pointer;}
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px 5px; text-align: left; vertical-align: middle; }
+        th { background-color: var(--primary-color); color: white; font-size: 14px; }
+        td { font-size: 15px; }
+        .btn-sm { padding: 5px 10px; border: none; border-radius: 4px; color: white; cursor: pointer; font-size: 13px; margin-right: 3px; }
+        .btn-out { background: #d32f2f; }
+        .btn-undo { background: #607d8b; }
+        .btn-replay { background: #ff5722; color: white; } 
+        .btn-edit { background: #ff9800; color: white; } 
+        .btn-1st { background: #ffd700; color: black; }
+        .btn-2nd { background: #c0c0c0; color: black; }
+        .btn-3rd { background: #cd7f32; color: white; }
+        .btn-del { background: #d32f2f; color: white; }
+        .btn-edit-name { background: #1976d2; color: white; }
+        .player-list-section { margin-bottom: 30px; border-bottom: 2px dashed #ccc; padding-bottom: 20px; }
+        .player-row { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee; background: #fff; border-radius: 4px; margin-bottom: 5px; }
+        .player-name { font-size: 16px; font-weight: 500; cursor: pointer; color: var(--primary-color); text-decoration: underline; }
+        .search-box { position: relative; margin-bottom: 10px; }
+        .search-box input { padding-left: 30px; }
+        .search-icon { position: absolute; left: 8px; top: 10px; color: #888; }
+        #suggestions { border: 1px solid #ddd; display: none; background: white; position: absolute; width: 95%; z-index: 1000; border-radius: 0 0 5px 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #suggestions div { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 16px; }
+        #suggestions div:hover { background-color: #f1f1f1; color: var(--primary-color); }
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .game-checkbox { background: #f9f9f9; padding: 8px; border: 1px solid #ddd; border-radius: 4px; display: flex; align-items: center; font-size: 14px; }
+        .art-extra-fields { background: #e3f2fd; padding: 10px; border-radius: 5px; border: 1px solid #90caf9; margin-top: 10px; display: none; }
+        
+        /* Modals */
+        #loginModal, #timerModal, #imgPreviewModal, #cameraModal, .art-slip-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .slip-content { background: white; padding: 20px; border-radius: 8px; width: 95%; max-width: 400px; text-align: center; border: 2px solid var(--primary-color); }
+        .slip-table td { border: 1px solid #ddd; padding: 5px; text-align: left; font-size: 14px; }
+        .slip-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; gap: 10px; }
+            .header-left { flex-direction: column; }
+            .club-info h1 { font-size: 20px; }
+            .login-btn { position: absolute; top: 15px; right: 15px; padding: 5px 15px; font-size: 14px; }
+            .logo { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= ALWAYS VISIBLE HEADER ================= -->
+    <header class="header">
+        <div class="header-left">
+            <img src="https://i.ibb.co/6Lkgrt8/1774204481519.jpg" 
+                 onerror="this.src='https://ui-avatars.com/api/?name=MSC&background=00695c&color=fff&font-size=0.4&rounded=true'" 
+                 alt="ক্লাবের লোগো" class="logo">
+            
+            <div class="club-info">
+                <h1>মডার্ণ স্পোর্টিং ক্লাব</h1>
+                <p>স্থাপিত - 1985</p>
+                <p>গভঃ রেজিঃ নং-S0035658 | দর্পন আইডি-WB/2023/0359221</p>
+            </div>
+        </div>
+        
+        <!-- Login Button opens modal -->
+        <button onclick="document.getElementById('loginModal').style.display='flex'" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> লগিন
+        </button>
+    </header>
+
+
+    <!-- ================= LANDING PAGE SECTION ================= -->
+    <div id="landingPage">
+        
+        <!-- [মা দুর্গার নতুন ছবি] -->
+        <div class="durga-container">
+            <img src="https://i.ibb.co/7NK4yb4W/Picsart-26-03-23-00-10-19-865.png" 
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Durga_Puja_in_Kolkata.jpg/640px-Durga_Puja_in_Kolkata.jpg'" 
+                 alt="মা দুর্গা" class="durga-img">
+        </div>
+
+        <!-- Blinking Button -->
+        <button onclick="enterApp('registration')" class="blink-btn">
+            🎨 অঙ্কণ প্রতিযোগিতা
+        </button>
+
+    </div>
+
+
+    <!-- ================= MAIN APP SECTION (Hidden by default) ================= -->
+    <div id="mainApp" style="display:none;" class="container">
+        
+        <!-- App Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-reg" onclick="switchTab('registration')">নাম নথিভুক্ত</button>
+            <button class="tab-btn" id="tab-part" onclick="switchTab('participants')">যোগদাতা</button>
+            <button class="tab-btn" id="tab-mgmt" onclick="switchTab('management')" style="display:none;">খেলা পরিচালনা</button>
+            <button class="tab-btn" id="tab-res" onclick="switchTab('results')">ফলাফল</button>
+            <button class="tab-btn" id="tab-set" onclick="switchTab('settings')" style="display:none;">সেটিং</button>
+        </div>
+
+        <!-- 1. Registration Tab -->
+        <div id="registration" class="tab-content active">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <h3 style="color:var(--primary-color);">খেলোয়াড় নথিভুক্তকরণ</h3>
+                <button onclick="goBackToHome()" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fas fa-home"></i> হোম</button>
+            </div>
+            <div class="form-group"><input type="date" id="regDate"></div>
+            <div class="form-group">
+                <input type="text" id="nameInput" placeholder="নাম লিখুন (Ex: Rohit -> রোহিত)" autocomplete="off">
+                <div id="suggestions"></div>
+            </div>
+            <div class="games-grid">
+                <label class="game-checkbox"><input type="checkbox" value="hari_bhanga"> হাড়িভাঙ্গা</label>
+                <label class="game-checkbox"><input type="checkbox" value="shankha"> শঙ্খবাজানো</label>
+                <label class="game-checkbox"><input type="checkbox" value="glass_circle"> গেলাস সার্কেল</label>
+                <label class="game-checkbox"><input type="checkbox" value="phuchka"> ফুচকা খাওয়া</label>
+                <label class="game-checkbox"><input type="checkbox" value="sajo"> যেমন খুশি সাঁজো</label>
+                <label class="game-checkbox"><input type="checkbox" value="musical_chair"> মিউজিক্যাল চেয়ার</label>
+                <label class="game-checkbox"><input type="checkbox" value="candle"> মোমবাতি জ্বালানো</label>
+                <label class="game-checkbox" style="background:#e1bee7; font-weight:bold;"><input type="checkbox" value="art_comp" onchange="toggleArtFields(this)"> অঙ্কন প্রতিযোগীতা</label>
+            </div>
+            <div id="artExtraFields" class="art-extra-fields">
+                <h4 style="margin-top:0; color:var(--primary-color);">অঙ্কন তথ্য:</h4>
+                <div class="form-group">
+                    <select id="artClassSelect" onchange="autoFillArtDetails()">
+                        <option value="">-- শ্রেণী নির্বাচন করুন --</option>
+                    </select>
+                </div>
+                <div class="form-group"><input type="text" id="artAddress" placeholder="ঠিকানা"></div>
+                <div class="form-group"><input type="number" id="artMobile" placeholder="মোবাইল নং"></div>
+                <div style="background:white; padding:5px; border-radius:4px; font-size:14px;">
+                    <span style="color:gray;">বিভাগ:</span> <b id="artGroupDisplay">-</b><br>
+                    <span style="color:gray;">কনসেপ্ট:</span> <b id="artConceptDisplay">-</b>
+                </div>
+            </div>
+            <div id="regLoader" style="display:none; text-align:center; color:var(--primary-color);">সেভ হচ্ছে...</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0 5px;">
+                <span style="font-size: 12px; color: gray;">* সার্ভার সিঙ্ক করুন</span>
+                <button onclick="staffRefresh(this)" style="padding: 4px 12px; font-size: 11px; background: #e0f2f1; color: #00695c; border: 1px solid #00695c; border-radius: 15px; cursor: pointer; font-weight: bold;">
+                    🔄 রিফ্রেশ
+                </button>
+            </div>
+            <button class="btn-submit" onclick="register()">জমা দিন</button>
+        </div>
+
+        <!-- 2. Participants Tab -->
+        <div id="participants" class="tab-content">
+            <select id="partGameSelector" onchange="renderParticipants()">
+                <option value="">-- সব খেলা (All Games) --</option>
+                <option value="hari_bhanga">হাড়িভাঙ্গা</option>
+                <option value="shankha">শঙ্খবাজানো</option>
+                <option value="glass_circle">গেলাস সার্কেল</option>
+                <option value="phuchka">ফুচকা খাওয়া</option>
+                <option value="sajo">যেমন খুশি সাঁজো</option>
+                <option value="musical_chair">মিউজিক্যাল চেয়ার</option>
+                <option value="candle">মোমবাতি জ্বালানো</option>
+                <option value="art_comp">অঙ্কন প্রতিযোগীতা</option>
+            </select>
+            <div class="search-box" style="margin-top:10px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="partSearch" placeholder="খেলোয়াড়ের নাম খুঁজুন..." onkeyup="renderParticipants()">
+            </div>
+            <div id="partArea" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- 3. Management Tab -->
+        <div id="management" class="tab-content">
+            <select id="mgmtGameSelector" onchange="renderMgmt()">
+                <option value="">-- খেলা বাছুন --</option>
+                <option value="hari_bhanga">হাড়িভাঙ্গা</option>
+                <option value="shankha">শঙ্খবাজানো</option>
+                <option value="glass_circle">গেলাস সার্কেল</option>
+                <option value="phuchka">ফুচকা খাওয়া</option>
+                <option value="sajo">যেমন খুশি সাঁজো</option>
+                <option value="musical_chair">মিউজিক্যাল চেয়ার</option>
+                <option value="candle">মোমবাতি জ্বালানো</option>
+                <option value="art_comp">অঙ্কন প্রতিযোগীতা</option>
+            </select>
+            <div id="artSubFilterDiv" style="display:none; margin-top:10px;">
+                <select id="artGroupFilter" onchange="renderMgmt()">
+                    <option value="all">সব বিভাগ</option>
+                    <option value="group_k">বিভাগ-ক</option>
+                    <option value="group_kh">বিভাগ-খ</option>
+                    <option value="group_g">বিভাগ-গ</option>
+                    <option value="group_gh">বিভাগ-ঘ</option>
+                    <option value="group_ng">বিভাগ-ঙ</option>
+                    <option value="group_ch">বিভাগ-চ</option>
+                    <option value="group_chh">বিভাগ-ছ</option>
+                    <option value="group_j">বিভাগ-জ</option>
+                </select>
+            </div>
+            <div class="search-box" style="margin-top:10px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="mgmtSearch" placeholder="খুঁজুন..." onkeyup="renderMgmt()">
+            </div>
+            <div id="mgmtArea"></div>
+        </div>
+
+        <!-- 4. Results Tab -->
+        <div id="results" class="tab-content">
+            <select id="resGameSelector" onchange="renderResults()">
+                <option value="">-- ফলাফল দেখুন --</option>
+                <option value="hari_bhanga">হাড়িভাঙ্গা</option>
+                <option value="shankha">শঙ্খবাজানো</option>
+                <option value="glass_circle">গেলাস সার্কেল</option>
+                <option value="phuchka">ফুচকা খাওয়া</option>
+                <option value="sajo">যেমন খুশি সাঁজো</option>
+                <option value="musical_chair">মিউজিক্যাল চেয়ার</option>
+                <option value="candle">মোমবাতি জ্বালানো</option>
+                <option value="art_comp">অঙ্কন প্রতিযোগীতা</option>
+            </select>
+            <div id="artResSubFilterDiv" style="display:none; margin-top:10px;">
+                 <select id="artResGroupFilter" onchange="renderResults()">
+                    <option value="all">সব বিভাগ</option>
+                    <option value="group_k">বিভাগ-ক</option>
+                    <option value="group_kh">বিভাগ-খ</option>
+                    <option value="group_g">বিভাগ-গ</option>
+                    <option value="group_gh">বিভাগ-ঘ</option>
+                    <option value="group_ng">বিভাগ-ঙ</option>
+                    <option value="group_ch">বিভাগ-চ</option>
+                    <option value="group_chh">বিভাগ-ছ</option>
+                    <option value="group_j">বিভাগ-জ</option>
+                 </select>
+            </div>
+            <div id="resTitle" style="text-align:center; font-weight:bold; margin:10px 0; color:var(--primary-color);"></div>
+            <table style="width:100%">
+                <thead><tr><th>ক্রম</th><th>নাম</th><th>ফলাফল</th></tr></thead>
+                <tbody id="resBody"></tbody>
+            </table>
+            <button onclick="window.print()" style="float:right; margin-top:10px; padding:5px; background:#607d8b; color:white; border:none; cursor:pointer;">Print</button>
+        </div>
+
+        <!-- 5. Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="player-list-section">
+                <h3>খেলোয়াড় সংশোধন ও বাতিল</h3>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="settingSearch" placeholder="নাম খুঁজুন..." onkeyup="renderPlayerList()">
+                </div>
+                <div id="playerMgmtList" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+            <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
+                <button class="btn-submit" style="background: #00897b; margin-bottom: 10px;" onclick="manualRefresh(this)">🔄 ডাটা রিফ্রেশ</button>
+                <button class="btn-submit" style="background: #c62828;" onclick="doLogout()">🚪 লগআউট</button>
+            </div>
+            <h3 style="border-top:2px solid #ccc; padding-top:10px; margin-top:20px;">🎨 অঙ্কন কনফিগারেশন</h3>
+            <p style="font-size:12px; color:gray;">প্রতিটি বিভাগের জন্য ক্লাস রেঞ্জ এবং বিষয় ঠিক করুন.</p>
+            <div id="artSettingsContainer"></div>
+            <button class="btn-submit" style="background:#795548; margin-bottom:20px;" onclick="saveArtConfig()">অঙ্কন সেটিং সেভ করুন</button>
+            <h3>খেলার কনফিগারেশন</h3>
+            <div id="settingsList"></div>
+            <button class="btn-submit" onclick="saveConfig()">সেটিং সেভ করুন</button>
+        </div>
+
+    </div>
+
+    <!-- ================= ALWAYS VISIBLE FOOTER ================= -->
+    <footer class="footer">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="footer-address">
+                <i class="fas fa-map-marker-alt"></i> ইটিন্ডা রোড, ধলতিথা, বসিরহাট ২৩ নং ওয়ার্ড,<br>উত্তর ২৪ পরগণা, পিন-৭৪৩৪১২
+            </div>
+            
+            <div class="footer-contact">
+                <i class="fas fa-phone-alt"></i> যোগাযোগ: ৯৮০০২১৬৬২১ <br>
+                <i class="fas fa-envelope"></i> ইমেল: modernsportingclub@gmail.com
+            </div>
+
+            <!-- Facebook Logo with hidden link -->
+            <a href="https://www.fb.com/dhaltithamsc" target="_blank" class="fb-link" title="আমাদের ফেসবুক পেজ">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+
+            <div class="copyright">
+                Design, Developed by Modern Sporting Club © ২০২৬
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ================= ALL MODALS (Hidden popups) ================= -->
+    
+    <!-- Login Modal -->
+    <div id="loginModal">
+        <div style="background:white; padding:30px; border-radius:10px; width:85%; max-width:300px; text-align:center; position:relative;">
+            <button onclick="document.getElementById('loginModal').style.display='none'" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:20px; cursor:pointer;">✕</button>
+            <h2 style="color:var(--primary-color);">লগিন</h2>
+            
+            <input type="text" id="loginUsername" placeholder="Username" style="text-align:center; font-size:18px; margin-bottom:10px; width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;" autocomplete="off">
+            <input type="password" id="loginPassword" placeholder="Password" style="text-align:center; font-size:18px; letter-spacing:3px; margin-bottom:15px; width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+            
+            <button class="btn-submit" onclick="checkLogin('judges')" style="background:#1976d2; margin-bottom:10px;">Judges Login</button>
+            <button class="btn-submit" onclick="checkLogin('member')" style="background:#388e3c; margin-bottom:10px;">Member Login</button>
+        </div>
+    </div>
+
+    <!-- App System Modals -->
+    <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:8px; width:90%; max-width:400px;">
+            <h3 style="margin-top:0; color:var(--primary-color);">তথ্য সংশোধন</h3>
+            <label>নাম:</label>
+            <input type="text" id="editNameInput" style="margin-bottom:15px;">
+            <label>খেলা নির্বাচন করুন:</label>
+            <div class="games-grid" id="editGamesContainer"></div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="document.getElementById('editModal').style.display='none'" style="padding:8px 15px; background:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">বাতিল</button>
+                <button onclick="saveEditData()" style="padding:8px 15px; background:#4caf50; color:white; border:none; border-radius:4px; cursor:pointer;">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slips, Details, Certificates... -->
+    <!-- (Your original modals below, completely untouched) -->
+    <div id="artSlipModal" class="art-slip-modal">
+        <div class="slip-content">
+            <div id="slipToPrint" style="padding:15px; background:white; position:relative;">
+                <div style="position: absolute; top: 10px; right: 10px;"><img id="slipQrCode" src="" alt="QR" style="width: 60px; height: 60px;"></div>
+                <h3 style="margin:0; color:var(--primary-color); border-bottom: 2px solid #000; padding-bottom:5px; padding-right: 70px;">অঙ্কন প্রতিযোগীতা</h3>
+                <p style="font-size:12px; margin:5px 0;">রেজিস্ট্রেশন স্লিপ</p>
+                <div style="text-align: right; font-size: 10px; margin-bottom: 5px;">তারিখ: <span id="slipDate"></span> | সময়: <span id="slipTime"></span></div>
+                <table class="slip-table">
+                    <tr><td><b>রেজি নং:</b></td><td id="slipRegNo" style="font-weight:bold;"></td></tr>
+                    <tr><td><b>নাম:</b></td><td id="slipName"></td></tr>
+                    <tr><td><b>শ্রেণী:</b></td><td id="slipClass"></td></tr>
+                    <tr><td><b>বিভাগ:</b></td><td id="slipGroup"></td></tr>
+                    <tr><td><b>বিষয়:</b></td><td id="slipConcept"></td></tr>
+                    <tr><td><b>ঠিকানা:</b></td><td id="slipAddress"></td></tr>
+                </table>
+                <div style="font-size:10px; text-align:center; margin-top:10px;">ক্রীড়া প্রতিযোগিতা কমিটি</div>
+            </div>
+            <button class="btn-submit" onclick="downloadSlip()" style="background:#00897b;">📥 ডাউনলোড স্লিপ</button>
+            <button class="btn-submit" onclick="closeSlipModal()" style="background:#546e7a; margin-top:5px;">বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <div id="genSlipModal" class="art-slip-modal">
+        <div class="slip-content">
+            <div id="genSlipToPrint" style="padding:15px; background:white; position:relative; border: 2px solid var(--primary-color);">
+                <div style="position: absolute; top: 10px; right: 10px;"><img id="genSlipQrCode" src="" alt="QR" style="width: 60px; height: 60px;"></div>
+                <h3 style="margin:0; color:var(--primary-color); border-bottom: 2px solid #000; padding-bottom:5px; padding-right: 70px;">প্রতিযোগিতা স্লিপ</h3>
+                <p style="font-size:12px; margin:5px 0;">রেজিস্ট্রেশন নিশ্চিতকরণ</p>
+                <table class="slip-table" style="margin-top: 15px;">
+                    <tr><td style="width: 30%;"><b>রেজি নং:</b></td><td id="genSlipRegNo" style="font-weight:bold;"></td></tr>
+                    <tr><td><b>নাম:</b></td><td id="genSlipName"></td></tr>
+                    <tr><td><b>অংশগ্রহণ:</b></td><td id="genSlipGames"></td></tr>
+                </table>
+                <div style="text-align: right; font-size: 11px; margin-top: 15px; font-weight: bold;">তারিখ: <span id="genSlipDate"></span></div>
+                <div style="font-size:10px; text-align:center; margin-top:10px; border-top: 1px dashed #ccc; padding-top: 5px;">ক্রীড়া প্রতিযোগিতা কমিটি</div>
+            </div>
+            <button class="btn-submit" onclick="downloadGenSlipPDF()" style="background:#00897b;">📥 ডাউনলোড স্লিপ</button>
+            <button class="btn-submit" onclick="document.getElementById('genSlipModal').style.display='none'" style="background:#546e7a; margin-top:5px;">বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <div id="artCertNewTemplate" style="display:none; width: 210mm; height: 297mm; background: #ffffff; padding: 20mm; position: absolute; left: -9999px; top: -9999px; box-sizing: border-box; font-family: 'Times New Roman', Times, serif;">
+        <div style="border: 8px double #166534; padding: 15mm; height: 100%; position: relative; border-radius: 10px;">
+            <div style="position: absolute; top: 15mm; left: 15mm; font-size: 14px; font-weight: bold;">Certificate No: <span id="feat3CertNo" style="color: #b91c1c;"></span></div>
+            <div style="position: absolute; top: 15mm; right: 15mm; font-size: 14px; font-weight: bold;">Date of Issue: <span id="feat3IssueDate"></span></div>
+            <div style="text-align: center; margin-top: 40mm;"><h1 style="font-size: 42px; color: #15803d; margin-bottom: 10mm; text-transform: uppercase; letter-spacing: 2px;">CERTIFICATE OF ACHIEVEMENT</h1></div>
+            <div style="text-align: center; font-size: 24px; line-height: 1.8; margin-top: 25mm;">
+                <p>This is to proudly certify that</p>
+                <h2 id="feat3Name" style="font-size: 36px; color: #1e3a8a; border-bottom: 2px solid #000; display: inline-block; padding: 0 30px; margin: 15px 0; font-style: italic;"></h2>
+                <p>of Class <span id="feat3Class" style="font-weight: bold;"></span></p>
+                <p style="margin-top: 20px;">has secured the <span id="feat3Pos" style="font-weight: bold; font-size: 28px; color: #c2410c;"></span> Position in the Drawing Competition</p>
+                <p>held on <span id="feat3EventDate" style="font-weight: bold;"></span> by <span id="feat3Org" style="font-weight: bold;"></span>.</p>
+            </div>
+            <div style="position: absolute; bottom: 25mm; left: 25mm; width: 60mm; text-align: center; border-top: 2px solid #000; padding-top: 10px; font-weight: bold; font-size: 18px;">Judges Signature</div>
+            <div style="position: absolute; bottom: 25mm; right: 25mm; width: 60mm; text-align: center; border-top: 2px solid #000; padding-top: 10px; font-weight: bold; font-size: 18px;">Authority Signature</div>
+        </div>
+    </div>
+
+    <!-- Other Modals (Timer, Player Details, Image Preview, Camera) -->
+    <div id="playerDetailsModal" class="art-slip-modal">
+        <div class="slip-content" style="text-align:left; position:relative;">
+            <button onclick="document.getElementById('playerDetailsModal').style.display='none'" style="position:absolute; top:10px; right:15px; border:none; background:transparent; font-size:20px; cursor:pointer;">✕</button>
+            <h3 style="color:var(--primary-color); border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:0;">খেলোয়াড় তথ্য</h3>
+            <table style="width:100%; font-size:15px;">
+                <tr><td style="width:100px; font-weight:bold; color:#666;">রেজি নং:</td><td id="detId" style="font-weight:bold;"></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">নাম:</td><td id="detName"></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">মোবাইল:</td><td><a id="detMobile" href="" style="text-decoration:none; color:#2196f3;"></a></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">ঠিকানা:</td><td id="detAddress"></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">ক্লাস:</td><td id="detClass"></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">বিভাগ:</td><td id="detGroup"></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">অঙ্কন বিষয়:</td><td><span id="detConcept"></span> <span id="detImgIcon" style="cursor:pointer; font-size:18px; margin-left:10px;" title="ছবি দেখুন">👁️</span></td></tr>
+                <tr><td style="font-weight:bold; color:#666;">স্ট্যাটাস:</td><td id="detStatus" style="font-weight:bold; color:var(--accent-color);"></td></tr>
+            </table>
+        </div>
+    </div>
+    <div id="imgPreviewModal">
+        <div style="position:relative; max-width:90%; max-height:80%;">
+            <img id="fullSizeImg" src="" style="max-width:100%; max-height:80vh; border:2px solid white; border-radius:5px;">
+            <button onclick="document.getElementById('imgPreviewModal').style.display='none'" style="position:absolute; top:-40px; right:0; background:none; border:none; color:white; font-size:30px; cursor:pointer;">✕</button>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:15px;">
+            <a id="downloadImgBtn" href="" download="Art_Image" class="btn-submit" style="background:#4caf50; padding:10px 20px; text-decoration:none; width:auto;">⬇️ ডাউনলোড</a>
+            <button id="deleteImgBtn" class="btn-submit" style="background:#f44336; padding:10px 20px; width:auto;">🗑️ ডিলিট</button>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+    // ******************************************************
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzemcbN-bUKYjMWnYCs6WLavKsJIWsWIX9ZCSo3viSgELp14favmttcfNyhk1KNdeNhcg/exec";
+    // ******************************************************
+
+    const SafeStorage = (function(){try{const ls=window.localStorage;const x='__t__';ls.setItem(x,x);ls.removeItem(x);return ls;}catch(e){return{_data:{},getItem:function(k){return this._data[k]||null;},setItem:function(k,v){this._data[k]=String(v);},removeItem:function(k){delete this._data[k];},clear:function(){this._data={};}};}})();
+    const SafeSession = (function(){try{const ss=window.sessionStorage;const x='__t__';ss.setItem(x,x);ss.removeItem(x);return ss;}catch(e){return{_data:{},getItem:function(k){return this._data[k]||null;},setItem:function(k,v){this._data[k]=String(v);},removeItem:function(k){delete this._data[k];},clear:function(){this._data={};}};}})();
+
+    let participants = [];
+    const CLASS_LIST = ['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'Graduate'];
+    
+    let artConfig = {'group_k':{label:'বিভাগ-ক',start:'Nursery',end:'UKG',concept:'প্রাকৃতিক দৃশ্য'},'group_kh':{label:'বিভাগ-খ',start:'1',end:'2',concept:'গ্রামের মেলা'},'group_g':{label:'বিভাগ-গ',start:'3',end:'4',concept:'মুক্তিযুদ্ধ'},'group_gh':{label:'বিভাগ-ঘ',start:'5',end:'6',concept:'শীতের সকাল'},'group_ng':{label:'বিভাগ-ঙ',start:'7',end:'8',concept:'বন্যা'},'group_ch':{label:'বিভাগ-চ',start:'9',end:'10',concept:'রক্তদান'},'group_chh':{label:'বিভাগ-ছ',start:'11',end:'12',concept:'বৃক্ষরোপণ'},'group_j':{label:'বিভাগ-জ',start:'Graduate',end:'Graduate',concept:'উন্মুক্ত'}};
+    if(SafeStorage.getItem('artConfig_v1')) artConfig = JSON.parse(SafeStorage.getItem('artConfig_v1'));
+
+    let gameConfig = {'hari_bhanga':{label:'হাড়িভাঙ্গা',type:'manual',unit:'সেমি',sort:'low',status:'active'},'shankha':{label:'শঙ্খবাজানো',type:'open',unit:'মিলি সেকেন্ড',sort:'high',status:'active'},'glass_circle':{label:'গেলাস সার্কেল',type:'open',unit:'মিলি সেকেন্ড',sort:'low',status:'active'},'phuchka':{label:'ফুচকা খাওয়া',type:'fixed',duration:60,unit:'টি',sort:'high',status:'active'},'candle':{label:'মোমবাতি জ্বালানো',type:'manual',unit:'টি',sort:'high',status:'active'},'sajo':{label:'যেমন খুশি সাঁজো',type:'manual',unit:'পয়েন্ট',sort:'manual',status:'active'},'musical_chair':{label:'মিউজিক্যাল চেয়ার',type:'manual',unit:'',sort:'manual',status:'active'},'art_comp':{label:'অঙ্কন প্রতিযোগীতা',type:'manual',unit:'পজিশন',sort:'manual',status:'active'}};
+    if(SafeStorage.getItem('gameConfig_v10')) { const saved=JSON.parse(SafeStorage.getItem('gameConfig_v10')); for(let k in saved) if(gameConfig[k]) Object.assign(gameConfig[k], saved[k]); }
+
+    // ================= NEW NAVIGATION LOGIC ================= //
+    
+    function enterApp(tabId) {
+        document.getElementById('landingPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        let role = SafeSession.getItem('role');
+        if(!role) { SafeSession.setItem('role', 'guest'); role = 'guest'; }
+        applyRoleAccess(role);
+        fetchData();
+        switchTab(tabId);
+        if(tabId === 'registration') {
+            const artCheckbox = document.querySelector('input[value="art_comp"]');
+            if(artCheckbox && !artCheckbox.checked && !artCheckbox.disabled) {
+                artCheckbox.checked = true; toggleArtFields(artCheckbox);
+            }
+        }
+    }
+
+    function goBackToHome() {
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('landingPage').style.display = 'flex';
+    }
+
+    function applyRoleAccess(role) {
+        if(role === 'guest' || !role) {
+            document.getElementById('tab-mgmt').style.display = 'none';
+            document.getElementById('tab-set').style.display = 'none';
+        } else {
+            document.getElementById('tab-mgmt').style.display = 'inline-block';
+            document.getElementById('tab-set').style.display = 'inline-block';
+        }
+    }
+
+    function checkLogin(roleType) {
+        const user = document.getElementById('loginUsername').value.trim().toLowerCase();
+        const pass = document.getElementById('loginPassword').value;
+
+        if((roleType==='judges' && user==='judges' && pass==='12349') || (roleType==='member' && user==='member' && pass==='12349')) {
+            SafeSession.setItem('role', roleType);
+            document.getElementById('loginModal').style.display = 'none';
+            applyRoleAccess(roleType);
+            if(document.getElementById('landingPage').style.display !== 'none') {
+                enterApp('management'); 
+            } else {
+                switchTab('management');
+            }
+        } else {
+            alert('ভুল ইউজারনেম বা পাসওয়ার্ড!');
+        }
+    }
+
+    function switchTab(tabId) {
+        const role = SafeSession.getItem('role');
+        if ((role === 'guest' || !role) && (tabId === 'management' || tabId === 'settings')) {
+            alert('আপনার এই পেজে যাওয়ার অনুমতি নেই!'); return;
+        }
+
+        document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        if(tabId === 'registration') { document.getElementById('tab-reg').classList.add('active'); syncRegistrationGamesStatus(); populateClassDropdown(); }
+        if(tabId === 'management') { document.getElementById('tab-mgmt').classList.add('active'); renderMgmt(); }
+        if(tabId === 'results') { document.getElementById('tab-res').classList.add('active'); renderResults(); }
+        if(tabId === 'settings') { document.getElementById('tab-set').classList.add('active'); renderSettingsUI(); renderArtSettings(); }
+        if(tabId === 'participants') { document.getElementById('tab-part').classList.add('active'); renderParticipants(); }
+        renderPlayerList();
+    }
+
+
+    // ================= EXISTING APP FUNCTIONS ================= //
+    
+    function syncRegistrationGamesStatus() {
+        document.querySelectorAll('.game-checkbox').forEach(label => {
+            const checkbox = label.querySelector('input'); if(!checkbox) return;
+            const gameCode = checkbox.value;
+            let badge = label.querySelector('.status-badge');
+            if(!badge) { badge = document.createElement('small'); badge.className = 'status-badge'; badge.style.marginLeft = '5px'; label.appendChild(badge); }
+            if(gameConfig[gameCode] && gameConfig[gameCode].status === 'inactive') {
+                label.style.opacity = '0.5'; label.style.pointerEvents = 'none'; checkbox.disabled = true; checkbox.checked = false; badge.innerText = '(বন্ধ)'; badge.style.color = 'red';
+            } else { label.style.opacity = '1'; label.style.pointerEvents = 'auto'; checkbox.disabled = false; badge.innerText = ''; }
+        });
+    }
+
+    async function fetchData() {
+        if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("URL")) return;
+        try {
+            let res = await fetch(GOOGLE_SCRIPT_URL);
+            let data = await res.json();
+            if(data.participants) {
+                participants = data.participants;
+                if(data.config && data.config.gameConfig) { gameConfig = data.config.gameConfig; SafeStorage.setItem('gameConfig_v10', JSON.stringify(gameConfig)); }
+                if(data.config && data.config.artConfig) { artConfig = data.config.artConfig; SafeStorage.setItem('artConfig_v1', JSON.stringify(artConfig)); }
+            } else { participants = data; }
+        } catch(e) { participants = JSON.parse(SafeStorage.getItem('db_v8')) || []; }
+        syncRegistrationGamesStatus();
+    }
+
+    async function pushData(action, payload) {
+        if(action === 'register') participants.push(payload.data);
+        else if(action === 'updateScore') { let p = participants.find(x => x.id == payload.id); if(p) { if(!p.scores) p.scores={}; p.scores[payload.gameCode] = payload.score; } }
+        else if(action === 'saveImage') { let p = participants.find(x => x.id == payload.id); if(p) p.artImage = payload.url; }
+        else if(action === 'deletePlayer') participants = participants.filter(x => x.id !== payload.id);
+        SafeStorage.setItem('db_v8', JSON.stringify(participants));
+
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("URL")) return;
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: action, ...payload }) });
+        } catch (error) { console.error("Push Error:", error); }
+    }
+
+    function populateClassDropdown() {
+        const sel = document.getElementById('artClassSelect');
+        if(sel.options.length > 1) return;
+        CLASS_LIST.forEach(c => { let opt = document.createElement('option'); opt.value = c; opt.text = c; sel.appendChild(opt); });
+    }
+
+    function toggleArtFields(checkbox) { document.getElementById('artExtraFields').style.display = checkbox.checked ? 'block' : 'none'; }
+    function autoFillArtDetails() {
+        const cls = document.getElementById('artClassSelect').value;
+        const idx = CLASS_LIST.indexOf(cls); let gInfo = null;
+        if(idx !== -1) {
+            for(let key in artConfig) {
+                const conf = artConfig[key];
+                if(idx >= CLASS_LIST.indexOf(conf.start) && idx <= CLASS_LIST.indexOf(conf.end)) { gInfo = { key: key, label: conf.label, concept: conf.concept }; break; }
+            }
+        }
+        document.getElementById('artGroupDisplay').innerText = gInfo ? gInfo.label : '-';
+        document.getElementById('artConceptDisplay').innerText = gInfo ? gInfo.concept : '-';
+    }
+
+    async function register() {
+        let name = document.getElementById('nameInput').value;
+        const date = document.getElementById('regDate').value;
+        const games = Array.from(document.querySelectorAll('.game-checkbox input:checked')).map(c=>c.value);
+        if(!name || games.length === 0) return alert("নাম ও খেলা দিন");
+        
+        let artData = {};
+        if(games.includes('art_comp')) {
+            const cls = document.getElementById('artClassSelect').value;
+            const addr = document.getElementById('artAddress').value;
+            const mob = document.getElementById('artMobile').value;
+            if(!cls || !addr || !mob) return alert("অঙ্কন প্রতিযোগিতার তথ্য দিন!");
+            const gInfo = { label: document.getElementById('artGroupDisplay').innerText, concept: document.getElementById('artConceptDisplay').innerText, key: "group" };
+            artData = { class: cls, address: addr, mobile: mob, groupKey: gInfo.key, groupLabel: gInfo.label, concept: gInfo.concept };
+        }
+
+        document.getElementById('regLoader').style.display = 'block';
+        const newPlayer = { id: Date.now(), name, date, games, scores: {}, ...artData };
+        await pushData('register', { data: newPlayer });
+        document.getElementById('regLoader').style.display = 'none';
+        
+        if(games.includes('art_comp')) showArtSlip(newPlayer);
+        else { resetRegForm(); alert("নথিভুক্ত হয়েছে"); }
+    }
+
+    function showArtSlip(p) {
+        document.getElementById('slipRegNo').innerText = p.id; document.getElementById('slipName').innerText = p.name;
+        document.getElementById('slipClass').innerText = p.class; document.getElementById('slipGroup').innerText = p.groupLabel;
+        document.getElementById('slipConcept').innerText = p.concept; document.getElementById('slipAddress').innerText = p.address;
+        document.getElementById('slipDate').innerText = new Date().toLocaleDateString('en-GB');
+        document.getElementById('slipTime').innerText = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('slipQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent('ID:'+p.id+'|Name:'+p.name)}`;
+        document.getElementById('artSlipModal').style.display = 'flex';
+    }
+
+    function downloadSlip() {
+        html2canvas(document.getElementById("slipToPrint"), {useCORS: true}).then(canvas => {
+            let link = document.createElement("a");
+            link.download = "Art_Slip_" + document.getElementById('slipName').innerText + ".png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
+
+    function downloadGenSlipPDF() {
+        const printArea = document.getElementById("genSlipToPrint");
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = "অপেক্ষা করুন...";
+        btn.disabled = true;
+
+        html2canvas(printArea, { scale: 3, useCORS: true }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const margin = 10;
+            const imgWidth = pdfWidth - (margin * 2);
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+            const playerName = document.getElementById('genSlipName').innerText;
+            pdf.save(`Slip_${playerName}_${Date.now()}.pdf`);
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    }
+
+    function closeSlipModal() { document.getElementById('artSlipModal').style.display = 'none'; resetRegForm(); }
+    function resetRegForm() {
+        document.getElementById('nameInput').value = ''; document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+        document.getElementById('artExtraFields').style.display = 'none'; document.getElementById('artClassSelect').value = '';
+        document.getElementById('artAddress').value = ''; document.getElementById('artMobile').value = '';
+    }
+
+    function renderParticipants() {
+        const gameFilter = document.getElementById('partGameSelector').value;
+        const search = document.getElementById('partSearch').value.toLowerCase();
+        let filteredList = participants.filter(p => p.name.toLowerCase().includes(search));
+        if (gameFilter) filteredList = filteredList.filter(p => p.games.includes(gameFilter));
+        
+        let html = `<div class="table-responsive"><table><thead><tr><th>নাম</th><th>খেলা</th><th style="text-align:center;">স্লিপ</th></tr></thead><tbody>`;
+        filteredList.forEach(p => {
+            const gamesNames = p.games.map(g => gameConfig[g] ? gameConfig[g].label : g).join(', ');
+            html += `<tr><td style="font-weight:bold; color:var(--primary-color);">${p.name}</td><td style="font-size:13px;">${gamesNames}</td><td style="text-align:center;"><button onclick="openGenSlip(${p.id})" style="background:none; border:none; font-size:22px; cursor:pointer;">📄</button></td></tr>`;
+        });
+        document.getElementById('partArea').innerHTML = html + `</tbody></table></div>`;
+    }
+
+    function openGenSlip(id) {
+        const p = participants.find(x => x.id === id); if(!p) return;
+        document.getElementById('genSlipRegNo').innerText = p.id; document.getElementById('genSlipName').innerText = p.name;
+        document.getElementById('genSlipGames').innerText = p.games.map(g => gameConfig[g] ? gameConfig[g].label : g).join(', ');
+        document.getElementById('genSlipDate').innerText = p.date || new Date().toLocaleDateString('en-GB');
+        document.getElementById('genSlipQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent('ID:'+p.id+'|Name:'+p.name)}`;
+        document.getElementById('genSlipModal').style.display = 'flex';
+    }
+
+    function renderMgmt() {
+        const game = document.getElementById('mgmtGameSelector').value;
+        const search = document.getElementById('mgmtSearch').value.toLowerCase();
+        const area = document.getElementById('mgmtArea'); area.innerHTML = '';
+        if(!game) return;
+        let players = participants.filter(p => p.games.includes(game) && p.name.toLowerCase().includes(search));
+        
+        let table = `<table width="100%">`;
+        players.forEach((p, i) => {
+            const sc = (p.scores && p.scores[game]) ? p.scores[game] : '';
+            let control = sc ? `<span style="font-weight:bold; color:green;">${sc}</span> <button class="btn-sm btn-replay" onclick="resetScore(${p.id}, '${game}')">🔄</button>` 
+                : `<input type="text" id="in_${p.id}" style="width:60px;"> <button class="btn-sm" style="background:#4caf50" onclick="manualSave(${p.id}, '${game}')">💾</button>`;
+            
+            if(game === 'art_comp' && !sc) control = `<button class="btn-sm btn-1st" onclick="setRank(${p.id}, 'art_comp', '1st')">১ম</button><button class="btn-sm btn-2nd" onclick="setRank(${p.id}, 'art_comp', '2nd')">২য়</button><button class="btn-sm btn-3rd" onclick="setRank(${p.id}, 'art_comp', '3rd')">৩য়</button>`;
+            if(game === 'art_comp' && sc) control = `<b style="color:green">${sc}</b> <button class="btn-sm btn-edit" onclick="setRank(${p.id}, 'art_comp', '')">Reset</button>`;
+
+            table += `<tr><td>${i+1}</td><td onclick="openPlayerDetails(${p.id})" style="color:var(--primary-color); cursor:pointer; text-decoration:underline;">${p.name}</td><td>${control}</td></tr>`;
+        });
+        area.innerHTML = table + `</table>`;
+    }
+
+    async function manualSave(id, game) { const val = document.getElementById(`in_${id}`).value; if(val) { await pushData('updateScore', { id, gameCode: game, score: val }); renderMgmt(); } }
+    async function setRank(id, game, rank) { await pushData('updateScore', { id, gameCode: game, score: rank }); renderMgmt(); }
+    async function resetScore(id, game) { if(confirm("মুছে আবার খেলবেন?")) { await pushData('updateScore', { id, gameCode: game, score: "" }); renderMgmt(); } }
+
+    function renderResults() {
+        const game = document.getElementById('resGameSelector').value;
+        const tbody = document.getElementById('resBody'); tbody.innerHTML = '';
+        if(!game) return;
+        document.getElementById('resTitle').innerText = gameConfig[game].label + " - চূড়ান্ত তালিকা";
+        
+        let list = participants.filter(p => p.scores && p.scores[game]);
+        list.forEach((p, i) => {
+            let sc = p.scores[game];
+            let rowStyle = "";
+            if(sc === '1st') rowStyle = "background:#fff9c4; font-weight:bold;";
+            else if(sc === '2nd') rowStyle = "background:#f5f5f5; font-weight:bold;";
+            else if(sc === '3rd') rowStyle = "background:#ffe0b2; font-weight:bold;";
+
+            tbody.innerHTML += `<tr style="${rowStyle}"><td>${i+1}</td><td>${p.name}</td><td><b>${sc}</b> ${game==='art_comp'&&sc?`<button onclick="generateDrawingCertificate({name:'${p.name}', class:'${p.class||''}', date:'${p.date||''}'}, '${sc}')" style="background:none; border:none; cursor:pointer;">🎖️</button>`:''}</td></tr>`;
+        });
+        if(list.length === 0) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">কোনো ফলাফল নেই</td></tr>';
+    }
+
+    function doLogout() { if(confirm("লগআউট?")) { SafeSession.clear(); location.reload(); } }
+    function renderPlayerList() {} 
+    function renderSettingsUI() {} 
+    function renderArtSettings() {} 
+    function openPlayerDetails(id) { alert("ID: " + id); } 
+    
+    window.onload = function() {
+        document.getElementById('regDate').valueAsDate = new Date();
+        const role = SafeSession.getItem('role');
+        if(role && role !== 'guest') {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            applyRoleAccess(role);
+            fetchData();
+            switchTab('management');
+        } else if (role === 'guest') {
+            fetchData();
+        } else {
+            fetchData();
+        }
+    }
+    
+    async function generateDrawingCertificate(p, rank) {
+        const template = document.getElementById('artCertNewTemplate');
+        document.getElementById('feat3CertNo').innerText = `ART-${new Date().getFullYear()}-${Math.floor(Math.random()*1000)}`;
+        document.getElementById('feat3IssueDate').innerText = new Date().toLocaleDateString();
+        document.getElementById('feat3Name').innerText = p.name;
+        document.getElementById('feat3Class').innerText = p.class || '';
+        document.getElementById('feat3Pos').innerText = rank;
+        document.getElementById('feat3EventDate').innerText = p.date || new Date().toLocaleDateString();
+        document.getElementById('feat3Org').innerText = "ক্রীড়া প্রতিযোগিতা কমিটি";
+
+        template.style.display = 'block';
+        try {
+            const canvas = await html2canvas(template, { scale: 2, useCORS: true, logging: false });
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4'); 
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+            pdf.save(`Certificate_${p.name}.pdf`);
+        } catch (error) { alert("Error generating certificate"); } 
+        finally { template.style.display = 'none'; }
+    }
+    </script>
+</body>
+</html>
